@@ -4,9 +4,9 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
   PolicySchemaVersion="0.3.0.0" 
-  TenantId="lamnahealth.onmicrosoft.com" 
+  TenantId="fmdclient.onmicrosoft.com" 
   PolicyId="B2C_1A_base" 
-  PublicPolicyUri="http://lamnahealth.onmicrosoft.com">
+  PublicPolicyUri="http://fmdclient.onmicrosoft.com">
   
   <BuildingBlocks>
     <ClaimsSchema>
@@ -1181,6 +1181,20 @@
           <InputClaims />
           <OutputClaims />
         </TechnicalProfile>
+        <TechnicalProfile Id="Saml2AssertionIssuer">
+          <DisplayName>Token Issuer</DisplayName>
+          <Protocol Name="None" />
+          <OutputTokenFormat>SAML2</OutputTokenFormat>
+          <Metadata>
+              <Item Key="IssuerUri">https://login.microsoftonline.com/te/fmdclient.onmicrosoft.com/B2C_1A_signin</Item>
+          </Metadata>
+          <CryptographicKeys>
+              <Key Id="SamlAssertionSigning" StorageReferenceId="B2C_1A_YourAppNameSamlCert" />
+              <Key Id="SamlMessageSigning" StorageReferenceId="B2C_1A_YourAppNameSamlCert" />
+          </CryptographicKeys>
+          <InputClaims />
+          <OutputClaims />
+        </TechnicalProfile>
       </TechnicalProfiles>
     </ClaimsProvider>
   </ClaimsProviders>
@@ -1380,6 +1394,42 @@
         </OrchestrationStep>
 
         <OrchestrationStep Order="8" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="JwtIssuer" />
+      </OrchestrationSteps>
+      <ClientDefinition ReferenceId="DefaultWeb" />
+    </UserJourney>
+
+    <UserJourney Id="SignInSaml">
+      <OrchestrationSteps>
+          <OrchestrationStep Order="1" Type="ClaimsExchange">
+            <ClaimsExchanges>
+                <ClaimsExchange Id="LocalAccountSigninEmailExchange" TechnicalProfileReferenceId="SelfAsserted-LocalAccountSignin-Email" />
+            </ClaimsExchanges>
+          </OrchestrationStep>
+          <OrchestrationStep Order="2" Type="ClaimsExchange">
+            <Preconditions>
+                <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+                  <Value>authenticationSource</Value>
+                  <Value>localAccountAuthentication</Value>
+                  <Action>SkipThisOrchestrationStep</Action>
+                </Precondition>
+            </Preconditions>
+            <ClaimsExchanges>
+                <ClaimsExchange Id="AADUserReadWithAltSecId" TechnicalProfileReferenceId="AAD-UserReadUsingAlternativeSecurityId" />
+            </ClaimsExchanges>
+          </OrchestrationStep>
+          <OrchestrationStep Order="3" Type="ClaimsExchange">
+            <Preconditions>
+                <Precondition Type="ClaimEquals" ExecuteActionsIf="true">
+                  <Value>authenticationSource</Value>
+                  <Value>socialIdpAuthentication</Value>
+                  <Action>SkipThisOrchestrationStep</Action>
+                </Precondition>
+            </Preconditions>
+            <ClaimsExchanges>
+                <ClaimsExchange Id="AADUserReadWithObjectId" TechnicalProfileReferenceId="AAD-UserReadUsingObjectId" />
+            </ClaimsExchanges>
+          </OrchestrationStep>
+          <OrchestrationStep Order="4" Type="SendClaims" CpimIssuerTechnicalProfileReferenceId="Saml2AssertionIssuer" />
       </OrchestrationSteps>
       <ClientDefinition ReferenceId="DefaultWeb" />
     </UserJourney>

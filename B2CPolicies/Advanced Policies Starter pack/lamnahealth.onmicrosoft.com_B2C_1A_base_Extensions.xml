@@ -1,19 +1,31 @@
-<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="lamnahealth.onmicrosoft.com" PolicyId="B2C_1A_base_extensions" PublicPolicyUri="http://lamnahealth.onmicrosoft.com">
-	<BasePolicy>
-	<!-- Change TenantId to your tenant -->
-		<TenantId>lamnahealth.onmicrosoft.com</TenantId>
-		<PolicyId>B2C_1A_base</PolicyId>
-	</BasePolicy>
-	<BuildingBlocks>
-	
-	</BuildingBlocks>
-	
-	<!--ClaimsProviders>
-	
-	</ClaimsProviders-->
-	
-	<!--UserJourneys>
-	
-	</UserJourneys-->
-	
+<TrustFrameworkPolicy 
+	xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	PolicySchemaVersion="0.3.0.0" 
+	TenantId="fmdclient.onmicrosoft.com" 
+	PolicyId="B2C_1A_base_extensions" 
+	PublicPolicyUri="http://fmdclient.onmicrosoft.com">
+   <BasePolicy>
+      <TenantId>fmdclient.onmicrosoft.com</TenantId>
+      <PolicyId>B2C_1A_base</PolicyId>
+   </BasePolicy>
+   <BuildingBlocks />
+   <ClaimsProviders>
+      <ClaimsProvider>
+         <DisplayName>Local Account SignIn</DisplayName>
+         <TechnicalProfiles>
+            <TechnicalProfile Id="login-NonInteractive">
+               <Metadata>
+                  <Item Key="client_id">ff03d1af-fdfd-43a7-9375-113deb6d609f</Item>
+                  <Item Key="IdTokenAudience">b600086e-02cd-4464-92d0-8b3fffb76299</Item>
+               </Metadata>
+               <InputClaims>
+                  <InputClaim ClaimTypeReferenceId="client_id" DefaultValue="ff03d1af-fdfd-43a7-9375-113deb6d609f" />
+                  <InputClaim ClaimTypeReferenceId="resource_id" PartnerClaimType="resource" DefaultValue="b600086e-02cd-4464-92d0-8b3fffb76299" />
+               </InputClaims>
+            </TechnicalProfile>
+         </TechnicalProfiles>
+      </ClaimsProvider>
+   </ClaimsProviders>
 </TrustFrameworkPolicy>
